@@ -37,7 +37,7 @@ const Login = () => {
 function login(props){
   setErrorMessage("")
   setError(false)
-  if(email==""||password==""){
+  if(email===""||password===""){
     setErrorMessage("Please enter all the fields.")
     setError(true)
     return;
@@ -54,36 +54,21 @@ function login(props){
   }
   else {
   const formData = new FormData()
-  formData.append('email_address',email)
+  formData.append('email',email)
+  formData.append('password',password)
  
-  axios.post("https://yourbuca.com/api/login/login-user",formData, {
+  axios.post("https://www.wissensquelle.com/testing/gvjygtyjftyftfuyfuuufufuy/22ndparallel/22ndParallel/public/api/admin-login",formData, {
   
   }).then(res => {
-    if(res.data.users.length=="0"){
-      setErrorMessage("You're email is not registered with us.")
+    if(res.data.status===0){
+      setErrorMessage(res.data.message);
       setError(true)
     }
-    else if(res.data.message=="User retrieved successfully!"){
-      {res.data.users.map((item, i) =>{
-        if(item.password==password){
-          localStorage.setItem('login', true);
-if(item.role=="superadmin"){
-  localStorage.setItem('screen', "superadmin");
-   window.location.href = "http://admin.yourbuca.com/";  
-
-}
-else if(item.role=="designer"){
-  localStorage.setItem('screen',"designer")
-window.location.href = "http://admin.yourbuca.com/";  
-
-}
-                  
-        }
-        else{
-          setErrorMessage("Please check the password you entered.")
-          setError(true)
-        }
-      } )}
+    else if(res.data.status===1){
+      localStorage.setItem('login', true);
+      localStorage.setItem('screen', "admin");
+      window.location.href = "https://wissensquelle.com/testing/22ndparallel/#/dashboard"; 
+      window.location.reload()
     }
      
   
@@ -152,7 +137,7 @@ window.location.href = "http://admin.yourbuca.com/";
                 <CCardBody className="text-center">
                   <div>
                     <h2>Sign up</h2>
-                    <p>Please contact the Super-Admin if you don't have the login credentails for the admin/designer panel of YourBuca S.L.</p>
+                    <p>Please contact the Admin if you don't have the login credentails for the admin panel of 22nd Parallel</p>
                     
                   </div>
                 </CCardBody>

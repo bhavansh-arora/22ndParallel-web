@@ -195,10 +195,10 @@ formData.append('iconColor',iconColor)
 formData.append('fieldsColor',fieldsColor)
 formData.append('headingColor',headingColor)
 formData.append('id',id)
-console.log("called")
+//console.log("called")
         axios.post("https://yourbuca.com/api/user/template-upload", formData,config, {
         }).then(res => {
-        console.log("then"+res)
+        //console.log("then"+res)
             if(res.data.status==1){
               setSuccessMessage("The template has been successfully updated.")
              setSuccess(true)

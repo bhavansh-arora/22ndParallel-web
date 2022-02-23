@@ -38,7 +38,6 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'));
 const User = React.lazy(() => import('./views/users/User'));
 const PaidUsers = React.lazy(() => import('./views/PaidUsers/PaidUsers'))
 const Newsletter = React.lazy(() => import('./views/Newsletter/Newsletter'))
-const Designers = React.lazy(() => import('./views/Designers/Designers'))
 const PendingUsers = React.lazy(() => import('./views/PendingUsers/PendingUsers'))
 const RegisteredUsers = React.lazy(() => import('./views/RegisteredUsers/RegisteredUsers'))
 const Templates = React.lazy(() => import('./views/Templates/Templates'))

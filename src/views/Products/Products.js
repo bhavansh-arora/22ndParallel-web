@@ -14,14 +14,19 @@ import {
   CInput,
   CSelect,
   CButton,
-  CAlert
+  CAlert,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
 
 
   } from '@coreui/react'
   import { DocsLink } from 'src/reusable'
   import usersData from '../users/UsersData'
   import axios from 'axios';
-const url = 'https://yourbuca.com/api/login'
+const url = 'https://www.wissensquelle.com/testing/gvjygtyjftyftfuyfuuufufuy/22ndparallel/22ndParallel/public/api/get-products'
   const getBadge = status => {
     switch (status) {
       case 'completed': return 'success'
@@ -31,71 +36,94 @@ const url = 'https://yourbuca.com/api/login'
       default: return 'primary'
     }
   }
-  const fields = ['Name','E-mail','Organisation Name', 'status', 'amount']
-const fields_data = ['name','type','unit','details']
+const fields_data = ['id','name','type','units','vendor' ,'details', 'Delete Product']
 function Products() {
-    const [users,setUsers] = useState([])
+    const [delete_modal, setDeleteModal] = useState(false)
+    const [products,setProducts] = useState([])
     const [name,setName] = useState("")
-    const [email,setEmail] = useState("")
-    const [password,setPassword] = useState("")
+    const [type,setType] = useState("")
+    const [units,setUnits] = useState("")
+    const [vendor,setVendor] = useState("")
+    const [details,setDetails] = useState("")
     const [error,setError] = useState(false)
     const [errormessage,setErrorMessage] = useState("")
     const [success,setSuccess] = useState(false)
     const [successMessage, setSuccessMessage] = useState("")
+    const [delete_id,setDeleteId] = useState()
+
     useEffect(() => {
         axios.get(url)
         .then(function (response) {
-          console.log(response)
-            setUsers(response.data.users);
+     //     console.log(response)
+            setProducts(response.data.data);
           })
 
       },[success]);
       function handleChangeName(e) {
         setName(e.target.value)
 
-    } function handleChangeEmail(e) {
-        setEmail(e.target.value)
+    } function handleChangeType(e) {
+        setType(e.target.value)
 
-    } function handleChangePassword(e) {
-        setPassword(e.target.value)
+    } function handleChangeUnits(e) {
+        setUnits(e.target.value)
 
     }
-    function validateEmail(email) {
-      const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(email);
-    }
-    function addUser(){
+    function handleChangeVendor(e) {
+      setVendor(e.target.value)
+
+  }
+  function handleChangeDetails(e) {
+    setDetails(e.target.value)
+
+}
+function delete_product(e) {
+  setDeleteModal(false)
+  setSuccess(false)
+  setError(false)
+  axios.delete("https://www.wissensquelle.com/testing/gvjygtyjftyftfuyfuuufufuy/22ndparallel/22ndParallel/public/api/delete-product/"+e, {
+
+}).then(res => {
+if(res.data.status===1){
+setSuccessMessage("Product has been successfully deleted.")
+setSuccess(true)
+}
+else{
+setErrorMessage(res.data.message)
+setError(true)
+}
+})
+.catch(error => {
+setErrorMessage(error.message)
+setError(true)
+})
+
+}
+    function addProduct(){
       setErrorMessage("")
       setSuccessMessage("")
       setError(false)
       setSuccess(false)
-      if(name==""||email==""||password==""){
+      if(name==""||type==""||units==""||type==0||units==0||vendor==""){
         setErrorMessage("Please enter all the fields.")
         setError(true)
         return;
       }
-      else if(!validateEmail(email)){
-      setErrorMessage("Please enter a valid email address.")
-      setError(true)
-      return;
-    }
-    else if(password.length<6){
-      setErrorMessage("Password should contain atleast 6 characters.")
-      setError(true)
-      return;
-    }
     else{
       setSuccess(false)
       setSuccessMessage("")
 const formData = new FormData()
 formData.append('name',name)
-formData.append('email_address',email)
-formData.append('password',password)
-axios.post("https://yourbuca.com/api/login/add-user",formData, {
+formData.append('type',type)
+formData.append('units',units)
+formData.append('details',details)
+formData.append('vendor',vendor)
+
+axios.post("https://www.wissensquelle.com/testing/gvjygtyjftyftfuyfuuufufuy/22ndparallel/22ndParallel/public/api/add-product",formData, {
 
 }).then(res => {
-  if(res.data.message=="User registered successfully!"){
-    setSuccessMessage("User has been successfully registered!")
+  if(res.data.status==1){
+    setSuccessMessage("Product has been successfully added!")
    setSuccess(true)
   }
   else{
@@ -110,34 +138,27 @@ axios.post("https://yourbuca.com/api/login/add-user",formData, {
 
     }
   }
-    function delete_user(e) {
-      setSuccess(false)
-
-      const formData = new FormData()
-      formData.append('email_address',e)
-      axios.post("https://yourbuca.com/api/login/delete-user",formData, {
-
-}).then(res => {
-  if(res.data.message=="Field updated successfully!"){
-    setSuccessMessage("User has been successfully delted.")
-   setSuccess(true)
-  }
-  else{
-    setErrorMessage(res.data.message)
-    setError(true)
-  }
-})
-.catch(error => {
-  setErrorMessage(error.message)
-    setError(true)
-})
-
-    }
     
     return (
         <>
             
           <CCard>
+          <CModal 
+              show={delete_modal} 
+              onClose={() => setDeleteModal(!delete_modal)}
+              color="danger"
+            >
+              <CModalHeader closeButton>
+                <CModalTitle>Delete Product</CModalTitle>
+              </CModalHeader>
+              <CModalBody>
+                Are you sure you want to remove the product from the database permanently?
+              </CModalBody>
+              <CModalFooter>
+                <CButton color="danger" onClick={() => delete_product(delete_id)}>Delete Product</CButton>{' '}
+                <CButton color="secondary" onClick={() => setDeleteModal(false)}>Cancel</CButton>
+              </CModalFooter>
+            </CModal>
             <CCardHeader>
               Manage Products
             </CCardHeader>
@@ -170,10 +191,10 @@ axios.post("https://yourbuca.com/api/login/add-user",formData, {
                   </CCol>
                   <CCol xs="12" md="9">
 
-                    <CSelect custom name="select" id="select">
+                    <CSelect custom name="select" id="select" onChange={handleChangeType}>
                       <option value="0">Please select Type</option>
-                      <option value="superadmin">Food</option>
-                      <option value="designer">Non-Food</option>
+                      <option value="food">Food</option>
+                      <option value="non-food">Non-Food</option>
                     </CSelect>
                   </CCol>
 
@@ -184,22 +205,31 @@ axios.post("https://yourbuca.com/api/login/add-user",formData, {
                   </CCol>
                   <CCol xs="12" md="9">
 
-                    <CSelect custom name="select" id="select">
+                    <CSelect custom name="select" id="select" onChange={handleChangeUnits}>
                       <option value="0">Please select Units</option>
-                      <option value="superadmin">Pckts</option>
-                      <option value="designer">Kg</option>
-                      <option value="designer">Nos</option>
+                      <option value="pckts">Pckts</option>
+                      <option value="kg">Kg</option>
+                      <option value="nos">Nos</option>
                     </CSelect>
 
                   </CCol>
 
+                </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="email-input">Vendor Name</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput type="vendor" id="vendor-input" name="vendor-input" placeholder="Enter Vendor Name" autoComplete="vendor_name" onChange={handleChangeVendor}/>
+                    <CFormText className="help-block">Please enter vendor's name</CFormText>
+                  </CCol>
                 </CFormGroup>
             <CFormGroup row>
                   <CCol md="3">
                     <CLabel htmlFor="email-input">Details</CLabel>
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CInput type="email" id="email-input" name="email-input" placeholder="Enter Product Details" autoComplete="email" onChange={handleChangeEmail}/>
+                    <CInput type="details" id="details-input" name="email-input" placeholder="Enter Product Details (optional)" autoComplete="details" onChange={handleChangeDetails}/>
                     <CFormText className="help-block">Please enter product details</CFormText>
                   </CCol>
                 </CFormGroup>
@@ -208,7 +238,7 @@ axios.post("https://yourbuca.com/api/login/add-user",formData, {
                     
                   </CCol>
                   <CCol xs="12" md="9">
-                    <CButton style={{marginTop:20,width:100}} block variant="outline" color="success" onClick={()=>addUser()}>Add</CButton>
+                    <CButton style={{marginTop:20,width:100}} block variant="outline" color="success" onClick={()=>addProduct()}>Add</CButton>
 
                   </CCol>
 
@@ -218,28 +248,20 @@ axios.post("https://yourbuca.com/api/login/add-user",formData, {
 
             <CCardBody>
             <CDataTable
-              items={users}
+              items={products}
               fields={fields_data}
               bordered
               itemsPerPage={4}
               pagination
               scopedSlots = {{
-                'status':
-                  (item)=>(
+                  'Delete Product' :
+                  (item)=>(                    
                     <td>
-                      <CBadge color={getBadge(item.status)}>
-                        {item.status}
-                      </CBadge>
+                    <CButton block variant="outline" color="danger" onClick={() =>{setDeleteId(item.id) 
+                      setDeleteModal(true)}}>Delete Product</CButton>
                     </td>
+
                   ),
-                  'Delete Admin' :
-                  (item)=>(
-                    <td>
-                   <CButton block variant="outline" color="danger" onClick={() =>delete_user(item.email)}>Remove Access</CButton>
-
-                    </td>
-                  )
-
               }}
             />
             </CCardBody>

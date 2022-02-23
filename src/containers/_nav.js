@@ -47,13 +47,19 @@ const _nav =  [
     icon: <CIcon name="cil-chart-pie" customClasses="c-sidebar-nav-icon"/>,
     
   },
-  {
-    _tag: 'CSidebarNavItem',
+ /* {
+    _tag: 'CSidebarNavDropdown',
     name: 'Reports',
-    to: '/reports',
+    route: '/reports',
     icon: <CIcon name="cil-file" customClasses="c-sidebar-nav-icon"/>,
-    
-  },
+    _children: [
+      {
+        _tag: 'CSidebarNavItem',
+        name: 'Outlet 1',
+        to: '/reports',
+        
+      }]
+    },
  /* {
     _tag: 'CSidebarNavItem',
     name: 'Paid Users',

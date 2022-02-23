@@ -19,10 +19,8 @@ const Page500 = React.lazy(() => import('./views/pages/page500/Page500'));
 const Designers = React.lazy(() => import('./views/Designers/Designers'))
 function App() {
   
-  var logged = localStorage.getItem('login') === 'true';
-  var screen = localStorage.getItem('screen')
-  if(logged){
-    if(screen=="superadmin"){
+  var screen = localStorage.getItem('screen');
+  if(screen==="admin"){
       return (
         <HashRouter>
             <React.Suspense fallback={loading}>
@@ -31,20 +29,7 @@ function App() {
               </Switch>
             </React.Suspense>
         </HashRouter>            
-      );
-      }
-      else if(screen=="designer") {
-    return(
-      <HashRouter>
-            <React.Suspense fallback={loading}>
-              <Switch>
-                <Route path="/" name="Designers" render={props => <Designers {...props}/>} />
-              </Switch>
-            </React.Suspense>
-        </HashRouter>  
-        
-    )
-      }
+      );    
       }
   else{
     return(

@@ -308,7 +308,7 @@ function deleteTemplate(id) {
                     <td>
                       <img src={image_url+item.template[0].image} width={70} height={50}/>
                       
-                        {console.log(item.template[0])}
+                        
                      
                       
                     </td>

@@ -36,9 +36,10 @@ const TheHeaderDropdown = () => {
         </CDropdownItem>
                
         <CDropdownItem onClick={() =>{
-            localStorage.setItem('login', false)
+            localStorage.setItem('login', false);
             localStorage.setItem('screen', "");
-            window.location.href = "http://admin.yourbuca.com/";  
+            window.location.href = "https://wissensquelle.com/testing/22ndparallel/#/";  
+            window.location.reload()
         }}>
           <CIcon name="cil-lock-locked" className="mfe-2" />
           Lock Account
